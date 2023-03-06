@@ -110,17 +110,8 @@ const RadioInput = (props) => {
 }
 
 const QuoteForm = React.forwardRef((props, ref) => {
-    const {
-        page, 
-        name, setName, 
-        email, setEmail, 
-        phone, setPhone, 
-        company, setCompany, 
-        error, clearError,
-        service, setService,
-        budget, setBudget,
-        handleSubmit
-    } = props
+    const {state, dispatch, handleSubmit} = props
+    const {page, name, email, phone, company, service, budget, error} = state
 
     const nameRef = React.useRef(null)
     const emailRef = React.useRef(null)
@@ -152,22 +143,22 @@ const QuoteForm = React.forwardRef((props, ref) => {
                 <div className="inputs page1">
                     <TextInput 
                         name="Name" key="name" id="name" icon="assets/name.svg" 
-                        onChange={(e) => {setName(e.target.value); clearError("name")}} 
+                        onChange={(e) => {dispatch({type: 'setName', value: e.target.value})}} 
                         value={name} ref={nameRef} 
                         error={error.name} />
                     <TextInput 
                         name="Email" type="email" id="email" icon="assets/email.svg" 
-                        onChange={(e) => {setEmail(e.target.value); clearError("email")}} 
+                        onChange={(e) => {dispatch({type: 'setEmail', value: e.target.value})}} 
                         value={email} ref={emailRef} 
                         error={error.email} />
                     <TextInput 
                         name="Phone Number" type="tel" minlength="10" maxlength="14" id="phone" icon="assets/phone.svg" 
-                        onChange={(e) => {setPhone(e.target.value); clearError("phone")}} 
+                        onChange={(e) => {dispatch({type: 'setPhone', value: e.target.value})}}
                         value={phone} ref={phoneRef} 
                         error={error.phone} />
                     <TextInput 
                         name="Company" id="company" icon="assets/company.svg" 
-                        onChange={(e) => {setCompany(e.target.value); clearError("company")}} 
+                        onChange={(e) => {dispatch({type: 'setCompany', value: e.target.value})}}
                         value={company} ref={companyRef}
                         error={error.company} />
                 </div>
@@ -185,28 +176,28 @@ const QuoteForm = React.forwardRef((props, ref) => {
                         type="service" 
                         value="Development" 
                         icon="assets/development.svg" 
-                        onChange={(e) => {setService(e.target.value)}} 
+                        onChange={(e) => {dispatch({type: 'setService', value: e.target.value})}} 
                         checked={service == "Development"}
                     />
                     <RadioInput 
                         type="service" 
                         value="Design" 
                         icon="assets/design.svg" 
-                        onChange={(e) => {setService(e.target.value)}} 
+                        onChange={(e) => {dispatch({type: 'setService', value: e.target.value})}} 
                         checked={service == "Design"}
                     />
                     <RadioInput 
                         type="service" 
                         value="Marketing" 
                         icon="assets/marketing.svg" 
-                        onChange={(e) => {setService(e.target.value)}} 
+                        onChange={(e) => {dispatch({type: 'setService', value: e.target.value})}} 
                         checked={service == "Marketing"}
                     />
                     <RadioInput 
                         type="service" 
                         value="Other" 
                         icon="assets/other.svg" 
-                        onChange={(e) => {setService(e.target.value)}} 
+                        onChange={(e) => {dispatch({type: 'setService', value: e.target.value})}} 
                         checked={service == "Other"} 
                     />
                 </div>
@@ -223,25 +214,25 @@ const QuoteForm = React.forwardRef((props, ref) => {
                     <RadioInput 
                         label="$5,000 - $10,000" 
                         value="5000-10000" 
-                        onChange={(e) => {setBudget(e.target.value)}} 
+                        onChange={(e) => {dispatch({type: 'setBudget', value: e.target.value})}} 
                         checked={budget == "5000-10000"}
                     />
                     <RadioInput 
                         label="$10,000 - $20,000" 
                         value="10000-20000" 
-                        onChange={(e) => {setBudget(e.target.value)}} 
+                        onChange={(e) => {dispatch({type: 'setBudget', value: e.target.value})}} 
                         checked={budget == "10000-20000"}
                     />
                     <RadioInput 
                         label="$20,000 - $50,000" 
                         value="20000-50000" 
-                        onChange={(e) => {setBudget(e.target.value)}} 
+                        onChange={(e) => {dispatch({type: 'setBudget', value: e.target.value})}} 
                         checked={budget == "20000-50000"}
                     />
                     <RadioInput 
                         label="$50,000 +" 
                         value="50000" 
-                        onChange={(e) => {setBudget(e.target.value)}} 
+                        onChange={(e) => {dispatch({type: 'setBudget', value: e.target.value})}} 
                         checked={budget == "50000"}
                     />
                 </div>
@@ -265,35 +256,51 @@ const QuoteForm = React.forwardRef((props, ref) => {
     }
 })
 
+const reducer = (state, action) => {
+    switch (action.type) {
+        case 'setPage':
+            return {...state, page: action.value};
+        case 'setName':
+            return {...state, name: action.value, error: {...state.error, name: ""}};
+        case 'setEmail':
+            return {...state, email: action.value, error: {...state.error, email: ""}};
+        case 'setPhone':
+            return {...state, phone: action.value, error: {...state.error, phone: ""}};
+        case 'setCompany':
+            return {...state, company: action.value, error: {...state.error, company: ""}};
+        case 'setService':
+            return {...state, service: action.value};
+        case 'setBudget':
+            return {...state, budget: action.value};
+        case 'setError':
+            return {...state, error: action.value};
+        default:
+            throw new Error();
+    }
+}
+
 const Quote = () => {
     /* States */
-    const [page, setPage] = React.useState(1);
-    const [name, setName] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [phone, setPhone] = React.useState("");
-    const [company, setCompany] = React.useState("");
-    const [service, setService] = React.useState("Development");
-    const [budget, setBudget] = React.useState("50000");
-    const [error, setError] = React.useState({
-        name: "", 
-        email: "", 
-        phone: "", 
-        company: ""
-    });
+    const initialFormState = {
+        page: 1,
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        service: "Development",
+        budget: "50000",
+        error: {
+            name: "",
+            email: "",
+            phone: "",
+            company: ""
+        }
+    }
+
+    const [state, dispatch] = React.useReducer(reducer, initialFormState);    
 
     /* Refs */
     const inputsRef = React.useRef(null);
-
-    const clearError = (type) => {
-        if (type == "name")
-            setError({...error, name: ""});
-        else if (type == "email")
-            setError({...error, email: ""});
-        else if (type == "phone")
-            setError({...error, phone: ""});
-        else if (type == "company")
-            setError({...error, company: ""});
-    }
 
     const validateInput = (type, value) => {
         if (type == "name") {
@@ -322,12 +329,12 @@ const Quote = () => {
     const validateForm = () => {
         let newError = {}
 
-        newError.name = validateInput("name", name);
-        newError.email = validateInput("email", email);
-        newError.phone = validateInput("phone", phone);
-        newError.company = validateInput("company", company);
+        newError.name = validateInput("name", state.name);
+        newError.email = validateInput("email", state.email);
+        newError.phone = validateInput("phone", state.phone);
+        newError.company = validateInput("company", state.company);
 
-        setError(newError);
+        dispatch({type: 'setError', value: newError});
 
         if (newError.name == "" && newError.email == "" && newError.phone == "" && newError.company == "")
             return true;
@@ -346,25 +353,25 @@ const Quote = () => {
     }
 
     const nextPage = () => {
-        if ((page == 1 && validateForm()) || (page > 1 && page < 4))
-            setPage(page+1)
+        if ((state.page == 1 && validateForm()) || (state.page > 1 && state.page < 4))
+            dispatch({type: 'setPage', value: state.page+1})
     }
 
     const prevPage = () => {
-        if (page > 1)
-            setPage(page-1)
+        if (state.page > 1)
+            dispatch({type: 'setPage', value: state.page-1})
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
         alert(JSON.stringify(
             {
-                name: name,
-                email: email,
-                phone: phone,
-                company: company,
-                service: service,
-                budget: budget
+                name: state.name,
+                email: state.email,
+                phone: state.phone,
+                company: state.company,
+                service: state.service,
+                budget: state.budget
             }
         ));
     }
@@ -372,22 +379,16 @@ const Quote = () => {
     return (
     <>
         <div className="content">
-            <Stepper page={page} start={1} end={4} />
+            <Stepper page={state.page} start={1} end={4} />
             <QuoteForm 
-                page={page} 
-                name={name} setName={setName}
-                email={email} setEmail={setEmail}
-                phone={phone} setPhone={setPhone}
-                company={company} setCompany={setCompany}
+                state={state}
                 ref={inputsRef}
-                service={service} setService={setService}
-                budget={budget} setBudget={setBudget}
-                error={error} clearError={clearError}
+                dispatch={dispatch}
                 handleSubmit={handleSubmit} />
         </div>        
         <div className="buttons">
-            {page == 1 ? <div></div> : <button type="button" className="previous" onClick={prevPage}>Previous step</button>}
-            {page == 4 ? <div></div> : <button type="button" className="next" onClick={nextPage}>Next step</button>}
+            {state.page == 1 ? <div></div> : <button type="button" className="previous" onClick={prevPage}>Previous step</button>}
+            {state.page == 4 ? <div></div> : <button type="button" className="next" onClick={nextPage}>Next step</button>}
         </div>
     </>
     )
