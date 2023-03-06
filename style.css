@@ -77,7 +77,7 @@ body {
     row-gap: 30px;
 }
 
-.pages {
+.stepper {
     display: flex;
     flex-direction: row;
     column-gap: 20px;
@@ -258,11 +258,7 @@ body {
     outline: 1px solid var(--cpurple) !important;
 }
 
-.radio-input {
-    padding: 25px;
-    border: 1px solid var(--clightgray);
-    box-shadow: 0px 2px 6px rgba(19, 18, 66, 0.07);
-    border-radius: 16px;
+.service-input, .budget-input {
     font-weight: 500;
     font-size: 18px;
     line-height: 20px;
@@ -270,22 +266,31 @@ body {
     display: grid;
     grid-template-rows: 1fr;
     cursor: pointer;
+}
+
+.radio-label {
+    border: 1px solid var(--clightgray);
+    box-shadow: 0px 2px 6px rgba(19, 18, 66, 0.07);
+    border-radius: 16px;
     width: 284px;
     height: 118px;
     box-sizing: border-box;
+    display: grid;
+    grid-column: 1;
+    grid-row: 1;
+    align-content: center;
+    cursor: pointer;
 }
 
-.radio-input.service-input {
-    grid-template-columns: 66px 1fr;
-}
-
-.radio-input.budget-input {
-    grid-template-columns: 25px 1fr;
-}
-
-.radio-input:has(input:checked) {
+input[type='radio']:checked + .radio-label {
+/* .radio-label:has(input:checked) { */
     outline: 2px solid var(--cblue);
     transition: 40ms transform ease-in-out;
+}
+
+.service-input {
+    /* grid-template-columns: 66px 1fr; */
+    grid-template-columns: 25px 66px 1fr;
 }
 
 .service-input input {
@@ -293,7 +298,7 @@ body {
 }
 
 .service-input .icon-div {
-    grid-column: 1;
+    grid-column: 2;
     grid-row: 1;
     background-color: rgba(74, 58, 255, 0.15);
     width: 66px;
@@ -302,6 +307,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    align-self: center;
 }
 
 .service-input .icon {
@@ -312,11 +318,20 @@ body {
     filter: drop-shadow(0px 0px 10px rgba(74, 58, 255, 0.5));
 }
 
+.service-input > label {
+    padding: 0 20px 0 101px;
+}
+/* 
 .service-input > span {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 1;
     place-self: center start;
     margin-left: 15px;
+} */
+
+.budget-input {
+    /* grid-template-columns: 25px 1fr; */
+    grid-template-columns: 25px 25px 1fr;
 }
 
 .budget-input input {
@@ -332,6 +347,8 @@ body {
     box-shadow: inset 0px -3px 8px rgba(20, 20, 43, 0.07);
     display: grid;
     place-content: center;
+    grid-column: 2;
+    grid-row: 1;
 }
 
 .budget-input input:checked {
@@ -352,12 +369,16 @@ body {
 .budget-input input:checked::before {
     transform: scale(1);
 }
-
+/* 
 .budget-input > span {
-    grid-column: 2;
+    grid-column: 3;
     grid-row: 1;
     place-self: center start;
     margin-left: 10px;
+} */
+
+.budget-input > label {
+    padding: 0 20px 0 60px;
 }
 
 .submit-title {
