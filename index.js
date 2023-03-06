@@ -324,7 +324,8 @@ const Quote = () => {
 
         dispatch({type: 'setValue', name: "error", value: newError});
 
-        if (newError.name == "" && newError.email == "" && newError.phone == "" && newError.company == "")
+        // if (newError.name == "" && newError.email == "" && newError.phone == "" && newError.company == "")
+        if (!Object.values(newError).some((value) => Boolean(value)))
             return true;
         else {
             if (newError.name != "")
